@@ -2,18 +2,24 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-// import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';  
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '/Users/consultadd/Desktop/empfrontend/src/contexts/Appcontext.js';
 
 
 
@@ -29,61 +35,85 @@ function Copyright(props) {
 
 
 
-export default function SignUp() {
-  
-  let navigate = useNavigate()
+export default function SignIn() {
 
+  const [role, setRole] = useState(''); 
+
+  const handlerChange = (event) => {
+    setRole(1);
+    console.log(role)
+  };
+  const handlerChange2 = (event) => {
+    // if(event.target.value == 'emp')
+    setRole(0);
+    console.log(role)
+  };
+
+  const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
     password: ""
   });
-  
+
+
   const handleChange = (e) => {
     const value = e.target.value;
-    
     setData({
       ...data,
       [e.target.name]: value
     });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const data = new FormData(e.currentTarget);
     const userData = {
       email: data.email,
       password: data.password
     };
-    
-    // console.log(userData)
 
-    axios
-      .post("http://127.0.0.1:8000/api/login_manager/", userData)
-      .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
-          const {user , token} = response.data;
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("token", token);
-
-          navigate("/home")
-  }})
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log("server responded");
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
-      });
+      if(role==0)
+      {
+      axios
+        .post("http://127.0.0.1:8000/api/login_employee/", userData)
+        .then((response) => {
+          if (response.status === 200) {
+            const token = response.data.jwt;
+            const jwtToken = response.data['jwt'];
+            // Store the token in cookies
+            Cookies.set('token', token, { expires: 7 }); // The token will expire in 7 days
+            axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
+            navigate("/home");
+          }
+        })
+        .catch((error) => {
+          // Handle login errors
+          console.log("error occurred");
+        })
+      }
+    else {
+      axios
+        .post("http://127.0.0.1:8000/api/login_admin/", userData)
+        .then((response) => {
+          if (response.status === 200) {
+            const token = response.data.jwt;
+            // Store the token in cookies
+            Cookies.set('token', token, { expires: 7 }); // The token will expire in 7 days
+            navigate('/admin');
+          }
+        })
+        .catch((error) => {
+          // Handle login errors
+          console.log("error occurred");
+        });
+    }
   };
+
 
 
 
   return (
       <Container component="main" maxWidth="xs">
+        
         <Box
           sx={{
             marginTop: 8,
@@ -99,6 +129,27 @@ export default function SignUp() {
             Sign In
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+
+
+
+          <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">User</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={role}
+          label="role"
+          
+        >
+          <MenuItem value={1} onClick={handlerChange}>Admin</MenuItem>
+          <MenuItem value={0} onClick={handlerChange2}>Employee</MenuItem>
+          
+        </Select>
+      </FormControl>
+    </Box>
+
+
             <TextField
               margin="normal"
               required
@@ -140,15 +191,17 @@ export default function SignUp() {
                   Forgot password?
                 </Link> */}
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Link to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        
       </Container>
+    
   );
 }
