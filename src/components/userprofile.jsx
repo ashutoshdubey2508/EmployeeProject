@@ -30,7 +30,6 @@ export default function UserProfile() {
    
     
     useEffect(() => {
-      if (!currentUser) return
       const selectedEmployeeID = id;
     
       axios.get(`http://127.0.0.1:8000/api/get_employee/${selectedEmployeeID}`)
@@ -50,7 +49,7 @@ export default function UserProfile() {
           console.error('Error manager data:', error);
         });
 
-    }, [currentUser]);
+    }, []);
 
     const handleUpdate = (formData) => {
 

@@ -32,6 +32,7 @@ const Admin = () =>{
 
      const handleOnClick = (employeeId) => {
         // Navigate to the employee profile page when the box is clicked
+
         navigate(`/user_profile/${employeeId}`);
       };
     

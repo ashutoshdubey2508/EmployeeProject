@@ -20,6 +20,9 @@ import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '/Users/consultadd/Desktop/empfrontend/src/contexts/Appcontext.js';
+import Modal from '@mui/material/Modal';
+
+
 
 
 
@@ -38,6 +41,9 @@ function Copyright(props) {
 export default function SignIn() {
 
   const [role, setRole] = useState(''); 
+  const [openModal, setOpenModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const handlerChange = (event) => {
     setRole(1);
@@ -54,7 +60,11 @@ export default function SignIn() {
     email: "",
     password: ""
   });
-
+  
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -86,7 +96,8 @@ export default function SignIn() {
           }
         })
         .catch((error) => {
-          // Handle login errors
+          setErrorMessage("Invalid email or password");
+          setOpenModal(true);
           console.log("error occurred");
         })
       }
@@ -102,7 +113,8 @@ export default function SignIn() {
           }
         })
         .catch((error) => {
-          // Handle login errors
+          setErrorMessage("Invalid email or password");
+          setOpenModal(true);
           console.log("error occurred");
         });
     }
@@ -200,6 +212,38 @@ export default function SignIn() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+
+        {errorMessage && (
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4
+            }}
+          >
+            <Typography variant="h6" component="h2" id="modal-title" gutterBottom>
+              Error
+            </Typography>
+            <Typography id="modal-description" gutterBottom>
+              {errorMessage}
+            </Typography>
+            <Button onClick={handleCloseModal} color="primary">
+              Close
+            </Button>
+          </Box>
+        </Modal>
+      )}
         
       </Container>
     
