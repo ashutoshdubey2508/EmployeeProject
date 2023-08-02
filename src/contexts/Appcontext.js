@@ -3,6 +3,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import Signout from "../components/Signout";
+import NotificationMsg from "../components/NotificationMsg";
+import Header from "../components/Header";
 
 
 const AppContext = createContext();
@@ -38,6 +40,7 @@ const AppContextProvider = ({ children }) => {
       value={{ mainUser, setMainUser, currentUser, setCurrentUser }}
     >
       {children}
+      {NotificationMsg}
     </AppContext.Provider>
   );
 };

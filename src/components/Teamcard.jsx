@@ -17,6 +17,8 @@ const TeamCard = () => {
   const [toPath, setToPath] = useState(`/`);
   const [teamData, setTeamData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [flag,setFlag] = useState(0);
+  const [empid, setEmpid] = useState();
 
   useEffect(() => {
     const selectedEmployeeID = id;
@@ -55,9 +57,13 @@ const TeamCard = () => {
     
     axios.post('http://127.0.0.1:8000/api/add_employee/', formData)
       .then((response) => {
-        
-        window.location.reload();
-        console.log('Employee added successfully:', response.data);
+        setFlag(1);
+        console.log(response.data);
+        setEmpid(response.data.employee_id);
+        console.log('Employee added successfully:', response.data.employee_id);
+
+       
+        // window.location.reload();
        
       })
       .catch((error) => {
@@ -66,6 +72,27 @@ const TeamCard = () => {
       });
   };
 
+
+  useEffect(() => {
+
+    const jsonData = {
+        "employeeId": empid,
+        "description": "You are added into the team!"            
+      };
+
+      
+      console.log("------------>",empid)
+
+      axios.post(`http://localhost:8080/add`,jsonData)
+     .then((response) => {
+        console.log("added notification")
+      })
+    .catch((error) => {
+     console.log("error");
+    })
+  },[empid])
+
+  
   return (
     teamData.length ?
    

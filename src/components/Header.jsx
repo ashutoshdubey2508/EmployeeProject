@@ -17,8 +17,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Cookies from 'js-cookie';
+import NotificationMsg from './NotificationMsg';
+import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,6 +69,8 @@ export default function Header() {
    
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [badge, setBadge] = useState(0);
+  
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -74,6 +78,22 @@ export default function Header() {
   const navigate = useNavigate();
   const navigate2 = useNavigate();
   const navigate3 = useNavigate();
+  
+  const handleNotificationClick = () => {
+    if(badge===0)
+    {
+      setBadge(1);
+    }
+    else if(badge===1)
+    {
+      setBadge(0);
+    }   
+    console.log(badge);
+  }
+  useEffect(() => {
+    console.log('Badge value changed:', badge);
+
+},[badge])
 
   const Handlelogout = () => {
     
@@ -164,7 +184,7 @@ export default function Header() {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={badge} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -224,6 +244,21 @@ export default function Header() {
             <Button size="large" aria-label="show 4 new mails" color="inherit" onclick={handleteam}>            
               My Team           
             </Button>
+            <IconButton 
+            size="large"
+           aria-label="show 17 new notifications"
+           color="inherit"
+           onClick={handleNotificationClick}
+            >
+            <Badge badgeContent={!badge} color="error">
+            
+           <NotificationsIcon />
+
+            </Badge>
+            
+            <NotificationMsg badge={badge}/>
+
+             </IconButton>
             <IconButton
               size="large"
               edge="end"

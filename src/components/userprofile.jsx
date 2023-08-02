@@ -26,6 +26,7 @@ export default function UserProfile() {
     const [userData, setUserData] = useState(null);
     const [tempmanager , setTempmanager] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [empid, setEmpid] = useState();
   
    
     
@@ -55,11 +56,14 @@ export default function UserProfile() {
 
         console.log(formData);
         
-        axios.post('http://127.0.0.1:8000/api/add_employee/', formData)
+        axios.put('http://127.0.0.1:8000/api/update_employee/', formData)
           .then((response) => {
-            
-            window.location.reload();
-            console.log('Employee added successfully:', response.data);
+            // setFlag(1);
+           console.log(response.data);
+           setEmpid(response.data.employee_id);
+           console.log('Employee added successfully:', response.data.employee_id);
+            // window.location.reload();
+            // console.log('Employee added successfully:', response.data);
            
           })
           .catch((error) => {
@@ -67,6 +71,25 @@ export default function UserProfile() {
             console.error('Error adding employee:', error);
           });
       };
+
+      useEffect(() => {
+
+        const jsonData = {
+            "employeeId": empid,
+            "description": "Your details are updated, kindly check!!!"            
+          };
+    
+          
+          console.log("------------>",empid)
+    
+          axios.post(`http://localhost:8080/add`,jsonData)
+         .then((response) => {
+            console.log("added notification")
+          })
+        .catch((error) => {
+         console.log("error");
+        })
+      },[empid])
  
 
   return (
@@ -200,7 +223,7 @@ export default function UserProfile() {
             
             <Addform
               onClose={() => setShowForm(false)} 
-              onUpdateEmployee={handleUpdate} 
+              onAddEmployee={handleUpdate} 
             />
           )
       }
