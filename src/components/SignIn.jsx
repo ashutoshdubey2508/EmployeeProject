@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '/Users/consultadd/Desktop/empfrontend/src/contexts/Appcontext.js';
+import { AppContext } from '../contexts/Appcontext.js';
 import Modal from '@mui/material/Modal';
 
 
