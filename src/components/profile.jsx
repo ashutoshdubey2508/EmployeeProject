@@ -9,7 +9,7 @@ import TeamCard from './Teamcard';
 import { useState, useEffect} from 'react';
 import axios from 'axios';
 import { useContext } from 'react';
-import { AppContext } from '/Users/consultadd/Desktop/empfrontend/src/contexts/Appcontext.js';
+import { AppContext } from '../contexts/Appcontext.js';
 import Header from './Header';
 
 const TeamCardWrapper = () => {
