@@ -6,7 +6,7 @@ import { Box, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { AppContext } from '/Users/consultadd/Desktop/empfrontend/src/contexts/Appcontext.js';
+import { AppContext } from '../contexts/Appcontext.js';
 import { useParams } from 'react-router-dom';
 import Header from './Header';
 import Addform from './Addform';
